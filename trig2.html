@@ -1,0 +1,145 @@
+<html>
+  <meta charset="utf-8">
+  <head>
+    <script src="math.js"></script>
+    <script>
+      window.onload = init
+
+      function drawLine(ctx, x1, y1, x2, y2, lineColor) {
+        ctx.strokeStyle = lineColor
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.stroke()
+      }
+      var end=750
+      var middle=end/2
+      var oneSize = 100
+      var staticColor = 'pink'
+      var dynamicColor = '#3f3ff5'
+
+      function drawCircle(ctx, radius) {
+        ctx.beginPath()
+        ctx.strokeStyle = staticColor
+        ctx.arc(middle, middle, radius, -math.PI/2, 0)
+        ctx.stroke()
+      }
+      function drawStatic(ctx) {
+
+        var tickSpace = oneSize/5
+        var tickSize = 5
+
+        ctx.clearRect (0, 0, end, end)
+
+        drawLine(ctx, middle, 0, middle, middle, staticColor)
+        drawLine(ctx, middle, middle, end, middle, staticColor)
+
+        for (i=1; i<=20; i+=1) {
+          drawLine(ctx, middle+tickSpace*i, middle-tickSize, middle+tickSpace*i, middle+tickSize, staticColor)
+          // drawLine(ctx, middle-tickSpace*i, middle-tickSize, middle-tickSpace*i, middle+tickSize, staticColor)
+          // drawLine(ctx, middle-tickSize, middle+tickSpace*i, middle+tickSize, middle+tickSpace*i, staticColor)
+          drawLine(ctx, middle-tickSize, middle-tickSpace*i, middle+tickSize, middle-tickSpace*i, staticColor)
+        }
+
+        for(i=1; i<=5; i++) {
+          drawCircle(ctx, i*oneSize)
+        }
+      }
+
+      // x1, y1,
+      // x2, y2,
+      // x3, y3
+      function drawTriangle(ctx, middle, x1, y1, x2, y2, x3, y3) {
+        drawLine(ctx, middle+x1, middle+y1, middle+x2, middle+y2, dynamicColor)
+        drawLine(ctx, middle+x2, middle+y2, middle+x3, middle+y3, dynamicColor)
+        drawLine(ctx, middle+x1, middle+y1, middle+x3, middle+y3, dynamicColor)
+      }
+
+      function my_round(number) {
+        return math.round(number*1000)/1000
+      }
+      function drawMathLabel(ctx, prefix, number, offset) {
+        textX=middle-150
+        ctx.textAlign = 'right'
+        ctx.fillText(prefix + '(α) = ', textX, middle-offset)
+        ctx.textAlign = 'left'
+        ctx.fillText(my_round(number), textX, middle-offset)
+      }
+      function drawTrig(alpha, ctx) {
+
+       var cos_alpha = math.cos(alpha)
+       var sin_alpha = math.sin(alpha)
+       var tan_alpha = math.tan(alpha)
+       var cot_alpha = math.cot(alpha)
+       var csc_alpha = math.csc(alpha)
+       var sec_alpha = math.sec(alpha)
+
+
+        x2=cos_alpha * oneSize
+        y2=sin_alpha * -oneSize
+
+        drawTriangle(ctx, middle, 0, 0, x2, y2, x2, 0)
+
+        drawLine(ctx, middle, -csc_alpha*oneSize+middle, middle+x2, middle+y2, 'green')
+        drawLine(ctx, middle+x2, middle+y2, middle+sec_alpha*oneSize, middle, 'yellow')
+        drawLine(ctx, middle, middle+y2, middle+x2, middle+y2, 'green')
+
+        ctx.beginPath()
+        ctx.strokeStyle = dynamicColor
+        ctx.arc(middle, middle, oneSize/4, -alpha, 0)
+        ctx.stroke()
+
+        ctx.fillStyle = 'green'
+        ctx.font = '20px sans-serif'
+        ctx.textAlign = 'left'
+        drawMathLabel(ctx, "sin", sin_alpha, 330)
+        drawMathLabel(ctx, "cos", cos_alpha, 300)
+        if (math.equal(cos_alpha, 0)) {
+          drawMathLabel(ctx, "tan", "NaN", 270)
+        } else {
+          drawMathLabel(ctx, "tan", tan_alpha, 270)
+        }
+        drawMathLabel(ctx, "cot", cot_alpha, 240)
+        drawMathLabel(ctx, "csc", csc_alpha, 210)
+        if (math.equal(cos_alpha, 0)) {
+          drawMathLabel(ctx, "sec", "NaN", 180)
+        } else {
+          drawMathLabel(ctx, "sec", sec_alpha, 180)
+        }
+      }
+
+      var staticPicture
+      function init() {
+        var canvas = document.getElementById('drawBoard')
+        var ctx = canvas.getContext('2d')
+        drawStatic(ctx)
+        staticPicture = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        setupSlider(ctx)
+      }
+      function setupSlider(ctx) {
+        var slider = document.getElementById('alpha-slider')
+        var atxt   = document.getElementById('alpha-text')
+        atxt.innerHTML = slider.value
+        slider.oninput = function() {
+          atxt.innerHTML = slider.value
+          ctx.putImageData(staticPicture, 0, 0)
+          drawTrig(slider.value*(math.PI/180), ctx)
+        }
+        drawTrig(math.PI/4, ctx)
+      }
+
+    </script>
+    <style>
+      body {
+        background-color: #19191d;
+        color:khaki
+      }
+    </style>
+  </head>
+  <body data-rssl="1">
+  <canvas id="drawBoard" width="750" height="750"></canvas>
+<input type="range" min="0" max="90" value="45"  class="slider" id="alpha-slider">
+  Vinkel α =  <span id="alpha-text" style="color:#3f3ff5">
+  </span>
+  </body>
+</html>
