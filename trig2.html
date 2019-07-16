@@ -127,14 +127,18 @@
         staticPicture = ctx.getImageData(0, 0, canvas.width, canvas.height)
         setupSlider(ctx)
       }
+      function getSliderDegree() {
+        var slider = document.getElementById('alpha-slider')
+        return slider.value/10
+      }
       function setupSlider(ctx) {
         var slider = document.getElementById('alpha-slider')
         var atxt   = document.getElementById('alpha-text')
         initRad = math.PI/4
-        atxt.innerHTML = slider.value + "° " + my_round(initRad) + " rad"
+        atxt.innerHTML = getSliderDegree() + "° " + my_round(initRad) + " rad"
         slider.oninput = function() {
-          var rad = slider.value*(math.PI/180)
-          atxt.innerHTML = slider.value + "° " + my_round(rad) + " rad"
+          var rad = getSliderDegree()*(math.PI/180)
+          atxt.innerHTML = getSliderDegree() + "° " + my_round(rad) + " rad"
           ctx.putImageData(staticPicture, 0, 0)
           drawTrig(rad, ctx)
         }
@@ -150,7 +154,7 @@
   </head>
   <body data-rssl="1">
   <canvas id="drawBoard" width="750" height="750"></canvas>
-<input type="range" min="0" max="90" value="45"  class="slider" id="alpha-slider">
+<input type="range" min="0" max="900" value="450" class="slider" id="alpha-slider">
   Vinkel α =  <span id="alpha-text" style="color:#3f3ff5">
   </span>
   </body>
