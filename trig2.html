@@ -59,7 +59,7 @@
         return math.round(number*1000)/1000
       }
       function drawMathLabel(ctx, prefix, number, offset) {
-        textX=middle-150
+        textX=middle-200
         ctx.textAlign = 'right'
         if (prefix.length > 0) {
           ctx.fillText(prefix + '(α) = ', textX, middle-offset)
@@ -68,6 +68,16 @@
         }
         ctx.textAlign = 'left'
         ctx.fillText(my_round(number), textX, middle-offset)
+
+        let scope = {
+          x: number
+        }
+        if (number == 'NaN') {
+          pis='NaN'
+        } else {
+          pis = math.evaluate("x/pi", scope)
+        }
+        ctx.fillText(' = π*' + my_round(pis), textX+60, middle-offset)
       }
       function drawTrig(alpha, ctx) {
 
