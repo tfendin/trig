@@ -61,7 +61,11 @@
       function drawMathLabel(ctx, prefix, number, offset) {
         textX=middle-150
         ctx.textAlign = 'right'
-        ctx.fillText(prefix + '(α) = ', textX, middle-offset)
+        if (prefix.length > 0) {
+          ctx.fillText(prefix + '(α) = ', textX, middle-offset)
+        } else {
+          ctx.fillText('α = ', textX, middle-offset)
+        }
         ctx.textAlign = 'left'
         ctx.fillText(my_round(number), textX, middle-offset)
       }
@@ -74,6 +78,10 @@
        var csc_alpha = math.csc(alpha)
        var sec_alpha = math.sec(alpha)
 
+       if (math.equal(cos_alpha, 0)) {
+         tan_alpha = "NaN"
+         sec_alpha = "NaN"
+       }
 
         x2=cos_alpha * oneSize
         y2=sin_alpha * -oneSize
@@ -92,20 +100,13 @@
         ctx.fillStyle = 'green'
         ctx.font = '20px sans-serif'
         ctx.textAlign = 'left'
+        drawMathLabel(ctx, "",    alpha,     360)
         drawMathLabel(ctx, "sin", sin_alpha, 330)
         drawMathLabel(ctx, "cos", cos_alpha, 300)
-        if (math.equal(cos_alpha, 0)) {
-          drawMathLabel(ctx, "tan", "NaN", 270)
-        } else {
-          drawMathLabel(ctx, "tan", tan_alpha, 270)
-        }
+        drawMathLabel(ctx, "tan", tan_alpha, 270)
         drawMathLabel(ctx, "cot", cot_alpha, 240)
         drawMathLabel(ctx, "csc", csc_alpha, 210)
-        if (math.equal(cos_alpha, 0)) {
-          drawMathLabel(ctx, "sec", "NaN", 180)
-        } else {
-          drawMathLabel(ctx, "sec", sec_alpha, 180)
-        }
+        drawMathLabel(ctx, "sec", sec_alpha, 180)
       }
 
       var staticPicture
@@ -119,15 +120,16 @@
       function setupSlider(ctx) {
         var slider = document.getElementById('alpha-slider')
         var atxt   = document.getElementById('alpha-text')
-        atxt.innerHTML = slider.value
+        initRad = math.PI/4
+        atxt.innerHTML = slider.value + "° " + my_round(initRad) + " rad"
         slider.oninput = function() {
-          atxt.innerHTML = slider.value
+          var rad = slider.value*(math.PI/180)
+          atxt.innerHTML = slider.value + "° " + my_round(rad) + " rad"
           ctx.putImageData(staticPicture, 0, 0)
-          drawTrig(slider.value*(math.PI/180), ctx)
+          drawTrig(rad, ctx)
         }
-        drawTrig(math.PI/4, ctx)
+        drawTrig(initRad, ctx)
       }
-
     </script>
     <style>
       body {
