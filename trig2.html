@@ -13,6 +13,7 @@
       ctx.lineTo(x2, y2)
       ctx.stroke()
     }
+    var ctx
     var end = 750
     var middle = end / 2
     var oneSize = 100
@@ -60,12 +61,14 @@
       return math.round(number * 1000) / 1000
     }
     function drawMathLabel(ctx, prefix, number, offset) {
-      textX = middle - 200
+      textX = middle - 250
       ctx.textAlign = 'right'
       if (prefix.length > 0) {
         ctx.fillText(prefix + '(α) = ', textX, middle - offset)
       } else {
         ctx.fillText('α = ', textX, middle - offset)
+        ctx.textAlign = 'left'
+        ctx.fillText('= ' + getSliderDegree() + '°', textX + 160, middle - offset)
       }
       ctx.textAlign = 'left'
       ctx.fillText(my_round(number), textX, middle - offset)
@@ -80,7 +83,11 @@
       }
       ctx.fillText(' = π*' + my_round(pis), textX + 60, middle - offset)
     }
-    function drawTrig(alpha, ctx) {
+    function drawTrig() {
+
+      ctx.putImageData(staticPicture, 0, 0)
+      var alpha = getSliderDegree() * (math.pi / 180)
+
 
       var cos_alpha = math.cos(alpha)
       var sin_alpha = math.sin(alpha)
@@ -123,27 +130,28 @@
     var staticPicture
     function init() {
       var canvas = document.getElementById('drawBoard')
-      var ctx = canvas.getContext('2d')
+      ctx = canvas.getContext('2d')
       drawStatic(ctx)
       staticPicture = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      setupSlider(ctx)
+      setupSlider()
+      drawTrig()
     }
     function getSliderDegree() {
       var slider = document.getElementById('alpha-slider')
       return slider.value / 10
     }
-    function setupSlider(ctx) {
+    function setupSlider() {
       var slider = document.getElementById('alpha-slider')
-      var atxt = document.getElementById('alpha-text')
-      initRad = math.PI / 4
-      atxt.innerHTML = getSliderDegree() + "° " + my_round(initRad) + " rad"
       slider.oninput = function () {
         var rad = getSliderDegree() * (math.PI / 180)
-        atxt.innerHTML = getSliderDegree() + "° " + my_round(rad) + " rad"
-        ctx.putImageData(staticPicture, 0, 0)
-        drawTrig(rad, ctx)
+        drawTrig()
       }
-      drawTrig(initRad, ctx)
+    }
+    function addAngle(increment) {
+      var slider = document.getElementById('alpha-slider')
+      var newVal = Number(slider.value) + Number(increment)
+      slider.value = newVal
+      drawTrig()
     }
   </script>
   <style>
@@ -154,9 +162,11 @@
 
     button {
       border: none;
-      padding: 14px 28px;
+      padding: 1px;
       cursor: pointer;
-      display: grid;
+      /* display: grid; */
+      float: left;
+      border: 1px solid
     }
 
     button.hover {
@@ -168,8 +178,10 @@
 <body data-rssl="1">
   <canvas id="drawBoard" width="750" height="750"></canvas>
   <input type="range" min="0" max="900" value="450" class="slider" id="alpha-slider">
-  Vinkel α =
-  <span id="alpha-text" style="color:#3f3ff5"></span>
+  <button onclick="addAngle(100)">+10</button>
+  <button onclick="addAngle(-100)">-10</button>
+  <button onclick="addAngle(1)">+0.1</button>
+  <button onclick="addAngle(-1)">-0.1</button>
 </body>
 
 </html>
