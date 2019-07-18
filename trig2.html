@@ -144,13 +144,13 @@
 
       var occupiedAngleDiff = 0.37
 
-      if ((alpha - (math.pi / 4 )) % (math.pi/2) > 0.37) {
+      if ((alpha - (math.pi / 4)) % (math.pi / 2) > 0.37) {
         csc_label_x = middle - 35
       } else {
         csc_label_x = middle - 10
       }
 
-      if (alpha % (math.pi/2) > 0.23 ) {
+      if (alpha % (math.pi / 2) > 0.23) {
         sec_label_y = middle + 20
       } else {
         sec_label_y = middle + 45
@@ -162,7 +162,7 @@
       drawLabelAtPos("csc", 0, 0, 0, csc_label_x, csc_y, 'right', 'green')
       drawLabelAtPos("sec", 0, 0, 0, sec_x, sec_label_y, 'left', dynamicColor)
       drawLabelAtPos("tan", middle + x2, middle + y2, -alpha + (math.pi / 2), 10, -10, 'left', 'yellow')
-      drawLabelAtPos("cot", middle + x2, middle + y2, -alpha + (math.pi/2), -10, -10, 'right')
+      drawLabelAtPos("cot", middle + x2, middle + y2, -alpha + (math.pi / 2), -10, -10, 'right')
 
     }
 
@@ -210,6 +210,10 @@
 
     button.hover {
       background: #eee
+    }
+
+    #alpha-slider {
+      width: 10cm
     }
   </style>
 </head>
