@@ -208,8 +208,8 @@
       border: 1px solid
     }
 
-    button.hover {
-      background: #eee
+    button:hover {
+      background: rgb(120, 121, 194)
     }
 
     #alpha-slider {
@@ -221,10 +221,10 @@
 <body data-rssl="1">
   <canvas id="drawBoard" width="750" height="750"></canvas>
   <input type="range" min="0" max="900" value="450" class="slider" id="alpha-slider">
-  <button onclick="addAngle(100)">+10</button>
-  <button onclick="addAngle(-100)">-10</button>
-  <button onclick="addAngle(1)">+0.1</button>
-  <button onclick="addAngle(-1)">-0.1</button>
+  <button onclick="addAngle(100)">+10°</button>
+  <button onclick="addAngle(-100)">-10°</button>
+  <button onclick="addAngle(1)">+0.1°</button>
+  <button onclick="addAngle(-1)">-0.1°</button>
 </body>
 
 </html>
