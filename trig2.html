@@ -6,7 +6,7 @@
   <script>
     window.onload = init
 
-    function drawLine(ctx, x1, y1, x2, y2, lineColor) {
+    function drawLine(x1, y1, x2, y2, lineColor) {
       ctx.strokeStyle = lineColor
       ctx.beginPath()
       ctx.moveTo(x1, y1)
@@ -20,47 +20,47 @@
     var staticColor = 'pink'
     var dynamicColor = '#3f3ff5'
 
-    function drawCircle(ctx, radius) {
+    function drawCircle(radius) {
       ctx.beginPath()
       ctx.strokeStyle = staticColor
       ctx.arc(middle, middle, radius, -math.PI / 2, 0)
       ctx.stroke()
     }
-    function drawStatic(ctx) {
+    function drawStatic() {
 
       var tickSpace = oneSize / 5
       var tickSize = 5
 
       ctx.clearRect(0, 0, end, end)
 
-      drawLine(ctx, middle, 0, middle, middle, staticColor)
-      drawLine(ctx, middle, middle, end, middle, staticColor)
+      drawLine(middle, 0, middle, middle, staticColor)
+      drawLine(middle, middle, end, middle, staticColor)
 
       for (i = 1; i <= 20; i += 1) {
-        drawLine(ctx, middle + tickSpace * i, middle - tickSize, middle + tickSpace * i, middle + tickSize, staticColor)
-        // drawLine(ctx, middle-tickSpace*i, middle-tickSize, middle-tickSpace*i, middle+tickSize, staticColor)
-        // drawLine(ctx, middle-tickSize, middle+tickSpace*i, middle+tickSize, middle+tickSpace*i, staticColor)
-        drawLine(ctx, middle - tickSize, middle - tickSpace * i, middle + tickSize, middle - tickSpace * i, staticColor)
+        drawLine(middle + tickSpace * i, middle - tickSize, middle + tickSpace * i, middle + tickSize, staticColor)
+        // drawLine(middle-tickSpace*i, middle-tickSize, middle-tickSpace*i, middle+tickSize, staticColor)
+        // drawLine(middle-tickSize, middle+tickSpace*i, middle+tickSize, middle+tickSpace*i, staticColor)
+        drawLine(middle - tickSize, middle - tickSpace * i, middle + tickSize, middle - tickSpace * i, staticColor)
       }
 
       for (i = 1; i <= 5; i++) {
-        drawCircle(ctx, i * oneSize)
+        drawCircle(i * oneSize)
       }
     }
 
     // x1, y1,
     // x2, y2,
     // x3, y3
-    function drawTriangle(ctx, middle, x1, y1, x2, y2, x3, y3) {
-      drawLine(ctx, middle + x1, middle + y1, middle + x2, middle + y2, dynamicColor)
-      drawLine(ctx, middle + x2, middle + y2, middle + x3, middle + y3, dynamicColor)
-      drawLine(ctx, middle + x1, middle + y1, middle + x3, middle + y3, dynamicColor)
+    function drawTriangle(middle, x1, y1, x2, y2, x3, y3) {
+      drawLine(middle + x1, middle + y1, middle + x2, middle + y2, dynamicColor)
+      drawLine(middle + x2, middle + y2, middle + x3, middle + y3, dynamicColor)
+      drawLine(middle + x1, middle + y1, middle + x3, middle + y3, dynamicColor)
     }
 
     function my_round(number) {
       return math.round(number * 1000) / 1000
     }
-    function drawMathLabel(ctx, prefix, number, offset) {
+    function drawMathLabel(prefix, number, offset) {
       textX = middle - 250
       ctx.textAlign = 'right'
       if (prefix.length > 0) {
@@ -121,11 +121,11 @@
       var csc_y = -csc_alpha * oneSize + middle
       var sec_x = sec_alpha * oneSize + middle
 
-      drawTriangle(ctx, middle, 0, 0, x2, y2, x2, 0)
+      drawTriangle(middle, 0, 0, x2, y2, x2, 0)
 
-      drawLine(ctx, middle, csc_y, middle + x2, middle + y2, 'green')
-      drawLine(ctx, middle + x2, middle + y2, sec_x, middle, 'yellow')
-      drawLine(ctx, middle, middle + y2, middle + x2, middle + y2, 'green')
+      drawLine(middle, csc_y, middle + x2, middle + y2, 'green')
+      drawLine(middle + x2, middle + y2, sec_x, middle, 'yellow')
+      drawLine(middle, middle + y2, middle + x2, middle + y2, 'green')
 
       ctx.beginPath()
       ctx.strokeStyle = dynamicColor
@@ -134,13 +134,13 @@
 
       ctx.fillStyle = 'green'
       ctx.font = '20px sans-serif'
-      drawMathLabel(ctx, "", alpha, 360)
-      drawMathLabel(ctx, "sin", sin_alpha, 330)
-      drawMathLabel(ctx, "cos", cos_alpha, 300)
-      drawMathLabel(ctx, "tan", tan_alpha, 270)
-      drawMathLabel(ctx, "cot", cot_alpha, 240)
-      drawMathLabel(ctx, "csc", csc_alpha, 210)
-      drawMathLabel(ctx, "sec", sec_alpha, 180)
+      drawMathLabel("", alpha, 360)
+      drawMathLabel("sin", sin_alpha, 330)
+      drawMathLabel("cos", cos_alpha, 300)
+      drawMathLabel("tan", tan_alpha, 270)
+      drawMathLabel("cot", cot_alpha, 240)
+      drawMathLabel("csc", csc_alpha, 210)
+      drawMathLabel("sec", sec_alpha, 180)
 
       var occupiedAngleDiff = 0.37
 
@@ -170,7 +170,7 @@
     function init() {
       var canvas = document.getElementById('drawBoard')
       ctx = canvas.getContext('2d')
-      drawStatic(ctx)
+      drawStatic()
       staticPicture = ctx.getImageData(0, 0, canvas.width, canvas.height)
       setupSlider()
       drawTrig()
