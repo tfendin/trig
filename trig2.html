@@ -23,7 +23,7 @@
     function drawCircle(radius) {
       ctx.beginPath()
       ctx.strokeStyle = staticColor
-      ctx.arc(middle, middle, radius, -math.PI / 2, 0)
+      ctx.arc(middle, middle, radius, -math.PI * 2, 0)
       ctx.stroke()
     }
     function drawStatic() {
@@ -33,19 +33,25 @@
 
       ctx.clearRect(0, 0, end, end)
 
-      drawLine(middle, 0, middle, middle, staticColor)
-      drawLine(middle, middle, end, middle, staticColor)
+      drawLine(middle, 0, middle, end, staticColor)
+      drawLine(0, middle, end, middle, staticColor)
 
-      for (i = 1; i <= 20; i += 1) {
-        drawLine(middle + tickSpace * i, middle - tickSize, middle + tickSpace * i, middle + tickSize, staticColor)
-        // drawLine(middle-tickSpace*i, middle-tickSize, middle-tickSpace*i, middle+tickSize, staticColor)
-        // drawLine(middle-tickSize, middle+tickSpace*i, middle+tickSize, middle+tickSpace*i, staticColor)
-        drawLine(middle - tickSize, middle - tickSpace * i, middle + tickSize, middle - tickSpace * i, staticColor)
+      for (i = -20; i <= 20; i += 1) {
+        if (i != 0) {
+          x1 = middle + tickSpace * i
+          y1 = middle - tickSpace * i
+          tickStart = middle-tickSize
+          tickEnd = middle+tickSize
+          drawLine(x1, tickStart, x1, tickEnd, staticColor)
+          drawLine(tickStart, y1, tickEnd, y1, staticColor)
+          if ((tickSpace * i) % oneSize == 0) {
+            drawLabelAtPos(i/5, 0, 0, 0, x1, middle+15, 'center', 'white')
+            drawLabelAtPos(i/5, 0, 0, 0, middle + 10, y1+4,  'center', 'white')
+          }
+        }
       }
 
-      for (i = 1; i <= 5; i++) {
-        drawCircle(i * oneSize)
-      }
+      drawCircle(oneSize)
     }
 
     // x1, y1,
@@ -100,7 +106,8 @@
     function drawTrig() {
 
       ctx.putImageData(staticPicture, 0, 0)
-      var alpha = getSliderDegree() * (math.pi / 180)
+      var alpha_degree = getSliderDegree()
+      var alpha = alpha_degree * (math.pi / 180)
 
 
       var cos_alpha = math.cos(alpha)
@@ -110,9 +117,15 @@
       var csc_alpha = math.csc(alpha)
       var sec_alpha = math.sec(alpha)
 
-      if (math.equal(cos_alpha, 0)) {
+      if (math.equal((alpha_degree + 90) % 180, 0)) {
         tan_alpha = "NaN"
         sec_alpha = "NaN"
+      }
+
+      if (math.equal(alpha_degree % 180, 0)) {
+        console.log('sin is 0')
+        cot_alpha = "NaN"
+        csc_alpha = "NaN"
       }
 
       x2 = cos_alpha * oneSize
@@ -142,7 +155,6 @@
       drawMathLabel("csc", csc_alpha, 210)
       drawMathLabel("sec", sec_alpha, 180)
 
-      var occupiedAngleDiff = 0.37
 
       if ((alpha - (math.pi / 4)) % (math.pi / 2) > 0.37) {
         csc_label_x = middle - 35
@@ -188,7 +200,14 @@
     }
     function addAngle(increment) {
       var slider = document.getElementById('alpha-slider')
+      var slider_max = Number(slider.max)
       var newVal = Number(slider.value) + Number(increment)
+      if (newVal < 0) {
+        newVal += slider_max
+      }
+      if (newVal > slider_max) {
+        newVal -= slider_max
+      }
       slider.value = newVal
       drawTrig()
     }
@@ -220,11 +239,15 @@
 
 <body data-rssl="1">
   <canvas id="drawBoard" width="750" height="750"></canvas>
-  <input type="range" min="0" max="900" value="450" class="slider" id="alpha-slider">
-  <button onclick="addAngle(100)">+10°</button>
-  <button onclick="addAngle(-100)">-10°</button>
-  <button onclick="addAngle(1)">+0.1°</button>
-  <button onclick="addAngle(-1)">-0.1°</button>
+  <div>
+    <button onclick="addAngle(100)">+10°</button>
+    <button onclick="addAngle(-100)">-10°</button>
+    <button onclick="addAngle(50)">+5°</button>
+    <button onclick="addAngle(-50)">-5°</button>
+    <button onclick="addAngle(1)">+0.1°</button>
+    <button onclick="addAngle(-1)">-0.1°</button>
+    <input type="range" min="0" max="3600" value="450" class="slider" id="alpha-slider">
+  </div>
 </body>
 
 </html>
